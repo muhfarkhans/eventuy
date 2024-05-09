@@ -1,0 +1,144 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  password     String
+  refreshToken String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model UserClient {
+  id           Int      @id @default(autoincrement())
+  name         String
+  email        String   @unique
+  password     String
+  address      String
+  phone        String
+  isVerified   Int
+  refreshToken String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  Event        Event[]
+}
+
+model User {
+  id                     Int                      @id @default(autoincrement())
+  name                   String
+  email                  String                   @unique
+  password               String
+  isVerified             Int
+  refreshToken           String?
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  EventTicketTransaction EventTicketTransaction[]
+  EventTicketUser        EventTicketUser[]
+}
+
+model Event {
+  id           Int           @id @default(autoincrement())
+  clientId     Int
+  adminId      Int?
+  title        String
+  description  String
+  thumbnail    String
+  logo         String
+  startTime    DateTime
+  endTime      DateTime
+  location     String
+  googleMaps   String
+  isAccepted   Int           @default(0)
+  isPublished  Int           @default(0)
+  publishedAt  DateTime?
+  rejectReason String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  client       UserClient    @relation(fields: [clientId], references: [id])
+  EventAttr    EventAttr[]
+  EventImage   EventImage[]
+  EventTicket  EventTicket[]
+}
+
+model EventAttr {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  name      String
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  event     Event    @relation(fields: [eventId], references: [id])
+}
+
+model EventImage {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  image     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  event     Event    @relation(fields: [eventId], references: [id])
+}
+
+model EventTicket {
+  id                     Int                      @id @default(autoincrement())
+  eventId                Int
+  name                   String
+  description            String
+  price                  Int
+  stock                  Int
+  available              Int
+  color                  String
+  createdAt              DateTime                 @default(now())
+  updatedAt              DateTime                 @updatedAt
+  event                  Event                    @relation(fields: [eventId], references: [id])
+  EventTicketTransaction EventTicketTransaction[]
+  EventTicketUser        EventTicketUser[]
+}
+
+model EventTicketTransaction {
+  id              Int               @id @default(autoincrement())
+  eventTicketId   Int
+  userId          Int
+  transactionId   String
+  amount          Int
+  statusMessage   String
+  statusCode      String
+  snapUrl         String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  eventTicket     EventTicket       @relation(fields: [eventTicketId], references: [id])
+  user            User              @relation(fields: [userId], references: [id])
+  EventTicketUser EventTicketUser[]
+}
+
+model EventTicketUser {
+  id                       Int                    @id @default(autoincrement())
+  userId                   Int
+  eventTicketId            Int
+  eventTicketTransactionId Int
+  status                   Int
+  code                     String
+  getIn                    Int
+  getInAt                  DateTime
+  getOut                   Int
+  getOutAt                 DateTime
+  createdAt                DateTime               @default(now())
+  updatedAt                DateTime               @updatedAt
+  user                     User                   @relation(fields: [userId], references: [id])
+  eventTicket              EventTicket            @relation(fields: [eventTicketId], references: [id])
+  eventTicketTransaction   EventTicketTransaction @relation(fields: [eventTicketTransactionId], references: [id])
+}

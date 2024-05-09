@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Event" ADD COLUMN     "isAccepted" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "isPublished" INTEGER NOT NULL DEFAULT 0,
+ADD COLUMN     "publishedAt" TIMESTAMP(3);
