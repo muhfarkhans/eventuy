@@ -19,7 +19,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - '${SERVER_PORT}:${SERVER_PORT}'
+      - '127.0.0.1:${SERVER_PORT}:${SERVER_PORT}'
     depends_on:
       - db
     volumes:
@@ -31,8 +31,8 @@ services:
     restart: always
     container_name: pgadmin
     environment:
-      - PGADMIN_DEFAULT_EMAIL=admin@admin.admin
-      - PGADMIN_DEFAULT_PASSWORD=password
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
     ports:
       - '5050:80'
     depends_on:
@@ -49,6 +49,8 @@ services:
     env_file: .env
     ports:
       - ${NGINX_PORT}:${NGINX_PORT}
+    depends_on:
+      - app
     networks:
       - app_net
 networks:
