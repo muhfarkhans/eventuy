@@ -9,8 +9,8 @@ RUN npm install
 
 COPY . .
 
-RUN chmod +x ./init/init-database.sql
-RUN chmod +x ./init/init-migrate.sh
+RUN chmod +x ./docker/init/init-database.sql
+RUN chmod +x ./docker/init/init-migrate.sh
 RUN npx prisma generate
 RUN npm run build
 
@@ -25,7 +25,7 @@ COPY --chown=node:node --from=build /usr/src/app/.env .env
 COPY --chown=node:node --from=build /usr/src/app/package.json .
 COPY --chown=node:node --from=build /usr/src/app/package-lock.json .
 COPY --chown=node:node --from=build /usr/src/app/prisma ./prisma
-COPY --chown=node:node --from=build /usr/src/app/init ./init
+COPY --chown=node:node --from=build /usr/src/app/docker/init ./docker/init
 
 RUN npm install --omit=dev
 
@@ -33,6 +33,6 @@ ENV NODE_ENV production
 
 # EXPOSE 3000
 
-CMD ["./init/init-migrate.sh"]
+CMD ["./docker/init/init-migrate.sh"]
 
 # CMD ["dumb-init", "node", "dist/src/main"]

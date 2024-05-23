@@ -8,8 +8,8 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
     volumes:
-      - ./db:/var/lib/postgresql/data
-      - ./init/init-database.sql:/docker-entrypoint-initdb.d/init-database.sql
+      - ./docker/db:/var/lib/postgresql/data
+      - ./docker/init/init-database.sql:/docker-entrypoint-initdb.d/init-database.sql
     ports:
       - '5432:5432'
     networks:
@@ -43,7 +43,7 @@ services:
     image: reverse-proxy
     restart: always
     build: 
-      context: ./nginx
+      context: ./docker/nginx
       dockerfile: Dockerfile
     container_name: ${NGINX_HOST}
     env_file: .env
