@@ -53,6 +53,8 @@ export class UserService {
 
   async updateUser(id: number, dto: UpdateUserDto) {
     const findById = await this.userRepository.findById(id);
+    if (!findById) throw new BadRequestException('Data not found.');
+
     let passwordHash = findById.password;
 
     console.log('findById', findById);
@@ -66,7 +68,7 @@ export class UserService {
       name: dto.name,
       email: dto.email,
       password: passwordHash,
-      isVerified: findById.isVerified,
+      isVerified: dto.isVerified,
     };
 
     const update = await this.userRepository.update(id, user);

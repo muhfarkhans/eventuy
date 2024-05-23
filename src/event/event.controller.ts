@@ -19,7 +19,7 @@ import { UpdateEventDto } from './dto/update.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { IsAdmin } from 'src/common/decorators/is-admin.decorator';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { DatatableDTO } from 'src/common/dto/Datatable.dto';
+import { DatatableDTO } from 'src/common/dto/datatable.dto';
 import { DatatableResponse } from 'types';
 import { RejectEventDto } from './dto/reject.dto';
 
@@ -117,6 +117,18 @@ export class EventController {
   }
 
   @UseGuards(AuthGuard(['jwt-admin', 'jwt-client']))
+  @Post('/:id/publish')
+  publishEvent(@Param('id', ParseIntPipe) id: number) {
+    return this.eventService.publishEvent(id);
+  }
+
+  @UseGuards(AuthGuard(['jwt-admin', 'jwt-client']))
+  @Post('/:id/unpublish')
+  unPublishEvent(@Param('id', ParseIntPipe) id: number) {
+    return this.eventService.unPublishEvent(id);
+  }
+
+  @UseGuards(AuthGuard(['jwt-admin', 'jwt-client']))
   @Put(':id')
   @UseInterceptors(
     FileFieldsInterceptor([
@@ -132,8 +144,8 @@ export class EventController {
     files: { thumbnail: Express.Multer.File[]; logo: Express.Multer.File[] },
     @IsAdmin() isAdmin: boolean,
   ) {
-    const thumbnail = files.thumbnail[0];
-    const logo = files.logo[0];
+    const thumbnail = files.thumbnail?.[0];
+    const logo = files.logo?.[0];
 
     return this.eventService.updateEvent(
       id,

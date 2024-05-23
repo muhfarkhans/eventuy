@@ -14,7 +14,7 @@ import { AdminService } from './admin.service';
 import { UpdateAdminDto } from './dto/update.dto';
 import { CreateAdminDto } from './dto/create.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { DatatableDTO } from 'src/common/dto/Datatable.dto';
+import { DatatableDTO } from 'src/common/dto/datatable.dto';
 import { DatatableResponse } from 'types';
 
 @Controller('admin')

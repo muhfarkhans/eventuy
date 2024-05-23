@@ -2,7 +2,7 @@ import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthAdminService } from './auth-admin.service';
 import { SigninDto } from './dto/signin.dto';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
-import { Admin } from 'src/admin/Admin.entity';
+import { Admin } from 'src/admin/admin.entity';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth-admin')

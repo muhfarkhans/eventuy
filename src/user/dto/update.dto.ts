@@ -10,4 +10,7 @@ export class UpdateUserDto {
 
   @IsOptional()
   password?: string;
+
+  @IsNotEmpty()
+  isVerified: number;
 }

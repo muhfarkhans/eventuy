@@ -124,6 +124,8 @@ export class EventService {
       endTime: dto.endTime,
       location: dto.location,
       googleMaps: dto.googleMaps,
+      isAccepted: 0,
+      isPublished: 0,
     };
 
     if (isAdmin) event.adminId = clientId;
@@ -163,6 +165,40 @@ export class EventService {
     event.isPublished = 0;
     event.publishedAt = null;
     event.rejectReason = rejectReason;
+
+    await this.eventRepository.update(id, event);
+    return event;
+  }
+
+  async publishEvent(id: number) {
+    const findById = await this.eventRepository.findById(id);
+    if (!findById) throw new BadRequestException('Data not found.');
+
+    if (findById.isAccepted == 0)
+      throw new BadRequestException('Need to accepted first');
+
+    const event = await this.eventRepository.findById(id);
+    if (event.isPublished == 1) {
+      return event;
+    }
+
+    event.isPublished = 1;
+    event.publishedAt = new Date();
+
+    await this.eventRepository.update(id, event);
+    return event;
+  }
+
+  async unPublishEvent(id: number) {
+    const findById = await this.eventRepository.findById(id);
+    if (!findById) throw new BadRequestException('Data not found.');
+
+    const event = await this.eventRepository.findById(id);
+    if (event.isPublished == 0) {
+      return event;
+    }
+
+    event.isPublished = 0;
 
     await this.eventRepository.update(id, event);
     return event;

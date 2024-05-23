@@ -16,4 +16,7 @@ export class UpdateClientDto {
 
   @IsString()
   phone: string;
+
+  @IsNotEmpty()
+  isVerified: number;
 }

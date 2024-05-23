@@ -17,7 +17,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { IsAdmin } from 'src/common/decorators/is-admin.decorator';
 import { GetUser } from 'src/common/decorators/get-user.decorator';
 import { Client } from './client.entity';
-import { DatatableDTO } from 'src/common/dto/Datatable.dto';
+import { DatatableDTO } from 'src/common/dto/datatable.dto';
 import { DatatableResponse } from 'types';
 
 @Controller('client')

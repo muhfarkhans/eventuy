@@ -55,6 +55,8 @@ export class ClientService {
 
   async updateClient(id: number, dto: UpdateClientDto) {
     const findById = await this.clientRepository.findById(id);
+    if (!findById) throw new BadRequestException('Data not found.');
+
     let passwordHash = findById.password;
 
     console.log('findById', findById);
@@ -70,7 +72,7 @@ export class ClientService {
       password: passwordHash,
       address: dto.address,
       phone: dto.phone,
-      isVerified: findById.isVerified,
+      isVerified: dto.isVerified,
     };
 
     const update = await this.clientRepository.update(id, user);
